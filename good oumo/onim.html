@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Өнімдер каталогы - Премиум Сорғы Шешімдері</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3176FF',secondary:''},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.sidebar-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease;
+}
+.sidebar {
+  transition: transform 0.3s ease;
+}
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+.product-card:hover {
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+}
+.custom-checkbox {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.custom-checkbox.checked {
+  background-color: #3176FF;
+  border-color: #3176FF;
+}
+.custom-checkbox.checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.custom-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.custom-switch-track {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: .4s;
+  border-radius: 34px;
+}
+.custom-switch-thumb {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+.custom-switch.active .custom-switch-track {
+  background-color: #3176FF;
+}
+.custom-switch.active .custom-switch-thumb {
+  transform: translateX(20px);
+}
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  background: #e2e8f0;
+  outline: none;
+}
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3176FF;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.custom-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3176FF;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.category-item.active {
+  color: #3176FF;
+  font-weight: 600;
+}
+.subcategory-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.subcategory-container.active {
+  max-height: 200px;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.pagination-btn.active {
+  background-color: #3176FF;
+  color: white;
+}
+</style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 h-[72px] bg-white shadow-sm z-50 px-6">
+  <div class="flex items-center justify-between h-full">
+    <div class="flex items-center gap-6">
+      <button id="menuToggle" class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+        <i class="ri-menu-line ri-lg"></i>
+      </button>
+      <a href="#" class="font-['Pacifico'] text-2xl text-primary">GoodPump</a>
+    </div>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+      <a href="index.html" class="text-gray-700 hover:text-primary transition-colors">Басты бет</a>
+      <a href="https://readdy.ai/home/3fed3cee-f5e5-46b7-bd05-1292e8bd6f7f/15dd7ee9-80a1-482c-bd00-6febe78e33f2" data-readdy="true" class="text-primary">Өнімдер</a>
+      <a href="#" class="text-gray-700 hover:text-primary transition-colors">Біз туралы</a>
+      <a href="#" class="text-gray-700 hover:text-primary transition-colors">Байланыс</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <div class="flex items-center bg-gray-100 rounded-full px-4 py-2 w-[200px]">
+          <input type="text" placeholder="Өнімдерді іздеу..." class="bg-transparent border-none outline-none text-sm flex-1">
+          <div class="w-8 h-8 flex items-center justify-center text-gray-500">
+            <i class="ri-search-line"></i>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+          <i class="ri-shopping-cart-2-line ri-lg"></i>
+        </div>
+        <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center">3</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Sidebar Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden sidebar-overlay"></div>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="fixed top-[72px] left-0 bottom-0 w-[280px] bg-white shadow-lg z-40 transform -translate-x-full transition-transform duration-300 overflow-y-auto">
+  <div class="p-6">
+    <h2 class="text-lg font-semibold mb-4">Категориялар</h2>
+    <div class="space-y-4">
+      <div class="category-item">
+        <div class="flex items-center justify-between py-2 cursor-pointer hover:text-primary" data-category="centrifugal">
+          <span>Центрифугалық сорғылар</span>
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+        </div>
+        <div class="subcategory-container pl-4 space-y-2 border-l border-gray-100">
+          <div class="py-2 cursor-pointer hover:text-primary">Соңғы сору сорғылары</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Бөлінген корпусты сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Тік турбиналық сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Көп сатылы сорғылар</div>
+        </div>
+      </div>
+      <div class="category-item">
+        <div class="flex items-center justify-between py-2 cursor-pointer hover:text-primary" data-category="submersible">
+          <span>Батырмалы сорғылар</span>
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+        </div>
+        <div class="subcategory-container pl-4 space-y-2 border-l border-gray-100">
+          <div class="py-2 cursor-pointer hover:text-primary">Канализациялық сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Ұңғымалық сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Дренаждық сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Ұсақтағыш сорғылар</div>
+        </div>
+      </div>
+      <div class="category-item">
+        <div class="flex items-center justify-between py-2 cursor-pointer hover:text-primary" data-category="positive">
+          <span>Оң ығысу сорғылары</span>
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+        </div>
+        <div class="subcategory-container pl-4 space-y-2 border-l border-gray-100">
+          <div class="py-2 cursor-pointer hover:text-primary">Тісті сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Лопастық сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Диафрагмалық сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Перистальтикалық сорғылар</div>
+        </div>
+      </div>
+      <div class="category-item">
+        <div class="flex items-center justify-between py-2 cursor-pointer hover:text-primary" data-category="industrial">
+          <span>Өндірістік сорғылар</span>
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-arrow-down-s-line"></i>
+          </div>
+        </div>
+        <div class="subcategory-container pl-4 space-y-2 border-l border-gray-100">
+          <div class="py-2 cursor-pointer hover:text-primary">Химиялық сорғылар</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Мұнай-газ сорғылары</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Тау-кен сорғылары</div>
+          <div class="py-2 cursor-pointer hover:text-primary">Су тазарту сорғылары</div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 pt-6 border-t border-gray-100">
+      <h3 class="text-lg font-semibold mb-4">Сүзгілеу</h3>
+      <div class="space-y-6">
+        <div>
+          <h4 class="font-medium mb-3">Баға диапазоны</h4>
+          <div class="flex items-center gap-4 mb-3">
+            <input type="number" min="0" max="10000" value="0" class="w-full px-3 py-2 border border-gray-200 rounded text-sm" placeholder="Мин">
+            <span class="text-gray-500">-</span>
+            <input type="number" min="0" max="10000" value="10000" class="w-full px-3 py-2 border border-gray-200 rounded text-sm" placeholder="Макс">
+          </div>
+          <input type="range" class="custom-range" min="0" max="10000" value="5000">
+          <div class="flex justify-between mt-2 text-sm text-gray-500">
+            <span>0 ₸</span>
+            <span>10,000,000 ₸</span>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-medium mb-3">Қуат (HP)</h4>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3">
+              <div class="custom-checkbox" data-value="0.5-5"></div>
+              <span>0.5 - 5 HP</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="custom-checkbox" data-value="5-20"></div>
+              <span>5 - 20 HP</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="custom-checkbox" data-value="20-50"></div>
+              <span>20 - 50 HP</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="custom-checkbox" data-value="50+"></div>
+              <span>50+ HP</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-medium mb-3">Қосымша мүмкіндіктер</h4>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span>Энергия тиімділігі</span>
+              <div class="custom-switch">
+                <div class="custom-switch-track"></div>
+                <div class="custom-switch-thumb"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Өздігінен толтыру</span>
+              <div class="custom-switch">
+                <div class="custom-switch-track"></div>
+                <div class="custom-switch-thumb"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Смарт басқару</span>
+              <div class="custom-switch active">
+                <div class="custom-switch-track"></div>
+                <div class="custom-switch-thumb"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Шуылсыз жұмыс</span>
+              <div class="custom-switch">
+                <div class="custom-switch-track"></div>
+                <div class="custom-switch-thumb"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="mt-8 w-full py-3 bg-primary text-white font-medium rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap">Сүзгілерді қолдану</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="pt-[72px] min-h-screen">
+  <!-- Breadcrumbs -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 py-3">
+      <div class="flex items-center text-sm text-gray-500">
+        <a href="index.html" class="hover:text-primary transition-colors">Басты бет</a>
+        <div class="mx-2">/</div>
+        <span class="text-gray-800 font-medium">Өнімдер каталогы</span>
+      </div>
+    </div>
+  </div>
+
+  
+
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Mobile Filter Button -->
+      <div class="lg:hidden w-full">
+        <button id="mobileFilterBtn" class="w-full py-3 bg-white border border-gray-200 rounded-button text-sm font-medium flex items-center justify-center gap-2">
+          <div class="w-5 h-5 flex items-center justify-center">
+            <i class="ri-filter-3-line"></i>
+          </div>
+          <span>Сүзгілерді көрсету</span>
+        </button>
+      </div>
+
+      <!-- Desktop Filters -->
+      <div class="hidden lg:block w-[280px] bg-white rounded-lg shadow-sm p-6 h-fit sticky top-[88px]">
+        <h3 class="text-lg font-semibold mb-4">Сүзгілеу</h3>
+        <div class="space-y-6">
+          <div>
+            <h4 class="font-medium mb-3">Баға диапазоны</h4>
+            <div class="flex items-center gap-4 mb-3">
+              <input type="number" min="0" max="10000000" value="0" class="w-full px-3 py-2 border border-gray-200 rounded text-sm" placeholder="Мин">
+              <span class="text-gray-500">-</span>
+              <input type="number" min="0" max="10000000" value="10000000" class="w-full px-3 py-2 border border-gray-200 rounded text-sm" placeholder="Макс">
+            </div>
+            <input type="range" class="custom-range" min="0" max="10000000" value="5000000">
+            <div class="flex justify-between mt-2 text-sm text-gray-500">
+              <span>0 ₸</span>
+              <span>10M ₸</span>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-medium mb-3">Қуат (HP)</h4>
+            <div class="space-y-2">
+              <div class="flex items-center gap-3">
+                <div class="custom-checkbox checked" data-value="0.5-5"></div>
+                <span>0.5 - 5 HP</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="custom-checkbox" data-value="5-20"></div>
+                <span>5 - 20 HP</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="custom-checkbox checked" data-value="20-50"></div>
+                <span>20 - 50 HP</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="custom-checkbox" data-value="50+"></div>
+                <span>50+ HP</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-medium mb-3">Қосымша мүмкіндіктер</h4>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span>Энергия тиімділігі</span>
+                <div class="custom-switch active">
+                  <div class="custom-switch-track"></div>
+                  <div class="custom-switch-thumb"></div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Өздігінен толтыру</span>
+                <div class="custom-switch active">
+                  <div class="custom-switch-track"></div>
+                  <div class="custom-switch-thumb"></div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Смарт басқару</span>
+                <div class="custom-switch">
+                  <div class="custom-switch-track"></div>
+                  <div class="custom-switch-thumb"></div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Шуылсыз жұмыс</span>
+                <div class="custom-switch">
+                  <div class="custom-switch-track"></div>
+                  <div class="custom-switch-thumb"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-medium mb-3">Материал</h4>
+            <div class="space-y-2">
+              <div class="flex items-center gap-3">
+                <div class="custom-checkbox checked" data-value="stainless"></div>
+                <span>Тот баспайтын болат</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="custom-checkbox" data-value="cast-iron"></div>
+                <span>Шойын</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="custom-checkbox" data-value="bronze"></div>
+                <span>Қола</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="custom-checkbox" data-value="plastic"></div>
+                <span>Пластик</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="mt-8 w-full py-3 bg-primary text-white font-medium rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap">Сүзгілерді қолдану</button>
+        <button class="mt-3 w-full py-2 text-gray-500 text-sm hover:text-primary transition-colors">Сүзгілерді тазалау</button>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="flex-1">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Product Card 1 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=A%2520high-quality%2520industrial%2520centrifugal%2520pump%2520with%2520blue%2520and%2520silver%2520metallic%2520finish%2520against%2520a%2520clean%2520white%2520background.%2520The%2520pump%2520features%2520clear%2520technical%2520details%252C%2520precision%2520engineering%252C%2520and%2520professional%2520studio%2520lighting%2520that%2520highlights%2520its%2520curves%2520and%2520industrial%2520design%2520elements.&width=400&height=400&seq=pump1&orientation=squarish" alt="ProFlow X3000 Centrifugal Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">ProFlow X3000 Центрифугалық сорғы</h3>
+              <p class="text-gray-600 text-sm mb-4">Өндірістік қолданыстарға арналған жоғары тиімді центрифугалық сорғы, жетілдірілген импеллер дизайнымен.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">1,249,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Card 2 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=A%2520professional%2520submersible%2520water%2520pump%2520with%2520sleek%2520design%2520and%2520blue%2520accents%2520against%2520a%2520clean%2520white%2520background.%2520The%2520pump%2520shows%2520detailed%2520engineering%2520features%2520including%2520inlet%252C%2520outlet%252C%2520and%2520control%2520panel.%2520Studio%2520lighting%2520highlights%2520the%2520pumps%2520waterproof%2520construction%2520and%2520robust%2520build%2520quality.&width=400&height=400&seq=pump2&orientation=squarish" alt="AquaDive S750 Submersible Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">AquaDive S750 Батырмалы сорғы</h3>
+              <p class="text-gray-600 text-sm mb-4">Күрделі су асты ортасында үздіксіз жұмыс істеуге арналған ауыр жүк көтергіш батырмалы сорғы.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">1,599,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Card 3 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=A%2520modern%2520industrial%2520positive%2520displacement%2520pump%2520with%2520blue%2520and%2520silver%2520components%2520against%2520a%2520clean%2520white%2520background.%2520The%2520pump%2520features%2520a%2520compact%2520design%2520with%2520visible%2520gear%2520mechanism%252C%2520precision%2520engineering%2520details%252C%2520and%2520professional%2520studio%2520lighting%2520that%2520highlights%2520its%2520technical%2520features%2520and%2520industrial-grade%2520construction.&width=400&height=400&seq=pump3&orientation=squarish" alt="GearMax P500 Positive Displacement Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">GearMax P500 Оң ығысу сорғысы</h3>
+              <p class="text-gray-600 text-sm mb-4">Тұтқыр сұйықтықтар мен маңызды қолданыстар үшін тұрақты ағын жылдамдығын ұсынатын дәлдікпен жасалған тісті сорғы.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">949,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Card 4 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=A%2520high-performance%2520industrial%2520chemical%2520pump%2520with%2520corrosion-resistant%2520blue%2520coating%2520against%2520a%2520clean%2520white%2520background.%2520The%2520pump%2520features%2520specialized%2520seals%252C%2520PTFE%2520components%252C%2520and%2520safety%2520features%2520for%2520handling%2520aggressive%2520chemicals.%2520Professional%2520studio%2520lighting%2520highlights%2520its%2520specialized%2520industrial%2520design%2520and%2520engineering%2520details.&width=400&height=400&seq=pump4&orientation=squarish" alt="ChemFlow C2000 Chemical Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">ChemFlow C2000 Химиялық сорғы</h3>
+              <p class="text-gray-600 text-sm mb-4">Агрессивті химиялық заттарды қауіпсіз және тиімді тасымалдауға арнайы жасалған коррозияға төзімді сорғы.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">2,149,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Card 5 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=A%2520compact%2520multistage%2520centrifugal%2520pump%2520with%2520blue%2520casing%2520against%2520a%2520clean%2520white%2520background.%2520The%2520pump%2520features%2520multiple%2520impeller%2520stages%2520for%2520high%2520pressure%2520applications%252C%2520with%2520visible%2520inlet%252Foutlet%2520ports%2520and%2520mounting%2520brackets.%2520Professional%2520studio%2520lighting%2520highlights%2520its%2520compact%2520design%2520and%2520precision%2520engineering.&width=400&height=400&seq=pump5&orientation=squarish" alt="PressuMax M4500 Multistage Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">PressuMax M4500 Көп сатылы сорғы</h3>
+              <p class="text-gray-600 text-sm mb-4">Тұрақты қысымды қажет ететін күшейткіш қолданыстар мен су жабдықтау жүйелеріне арналған жоғары қысымды көп сатылы сорғы.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">1,399,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Card 6 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=A%2520modern%2520self-priming%2520pump%2520with%2520blue%2520and%2520silver%2520components%2520against%2520a%2520clean%2520white%2520background.%2520The%2520pump%2520features%2520a%2520distinctive%2520priming%2520chamber%252C%2520robust%2520construction%252C%2520and%2520digital%2520control%2520panel.%2520Professional%2520studio%2520lighting%2520highlights%2520its%2520specialized%2520design%2520for%2520applications%2520requiring%2520automatic%2520priming%2520capability.&width=400&height=400&seq=pump6&orientation=squarish" alt="AutoPrime A1200 Self-Priming Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">AutoPrime A1200 Өздігінен толтыру сорғысы</h3>
+              <p class="text-gray-600 text-sm mb-4">Әртүрлі сору жағдайларында автоматты жұмыс істеуге арналған смарт басқару жүйесі бар сенімді өздігінен толтыру сорғысы.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">1,099,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Card 7 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=A%2520sophisticated%2520industrial%2520pump%2520with%2520metallic%2520blue%2520finish%2520and%2520digital%2520display%2520panel%2520against%2520clean%2520white%2520background.%2520Features%2520advanced%2520monitoring%2520sensors%2520and%2520robust%2520construction%2520with%2520clear%2520technical%2520details%2520highlighted%2520by%2520professional%2520studio%2520lighting.&width=400&height=400&seq=pump7&orientation=squarish" alt="HydroTech X5000 Industrial Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">HydroTech X5000 Өндірістік сорғы</h3>
+              <p class="text-gray-600 text-sm mb-4">Талапты қолданыстарға арналған смарт мониторинг және жоғары ағын сыйымдылығы бар жетілдірілген өндірістік сорғы.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">1,949,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Card 8 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=An%2520eco-friendly%2520industrial%2520pump%2520with%2520sleek%2520design%2520and%2520energy%2520efficiency%2520indicators.%2520Features%2520green%2520accents%2520and%2520modern%2520control%2520interface%2520against%2520clean%2520white%2520background%252C%2520highlighting%2520its%2520sustainable%2520engineering%2520approach.&width=400&height=400&seq=pump8&orientation=squarish" alt="EcoFlow E2500 Energy-Efficient Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">EcoFlow E2500 Энергия үнемдеу сорғысы</h3>
+              <p class="text-gray-600 text-sm mb-4">Тұрақты өндірістік операцияларға арналған оңтайландырылған өнімділігі бар энергияны үнемдейтін сорғы дизайны.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">1,349,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Product Card 9 -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden product-card transition-all duration-200">
+            <div class="h-64 overflow-hidden">
+              <img src="https://readdy.ai/api/search-image?query=A%2520heavy-duty%2520industrial%2520pump%2520with%2520reinforced%2520construction%2520and%2520powerful%2520motor%2520housing.%2520Shows%2520industrial-grade%2520materials%2520and%2520protective%2520features%2520against%2520clean%2520white%2520background%2520with%2520professional%2520lighting.&width=400&height=400&seq=pump9&orientation=squarish" alt="PowerMax P7500 Heavy-Duty Pump" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold mb-2">PowerMax P7500 Ауыр жүк сорғысы</h3>
+              <p class="text-gray-600 text-sm mb-4">Талапты өндірістік ортада үздіксіз жұмыс істеуге арналған мықты құрылымды сорғы.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-gray-900">2,249,995 ₸</span>
+                <button class="px-4 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Себетке қосу</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="mt-12 flex flex-col items-center">
+          <div class="flex items-center gap-2 mb-4">
+            <button class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary transition-colors">
+              <i class="ri-arrow-left-s-line"></i>
+            </button>
+            <button class="w-10 h-10 flex items-center justify-center rounded bg-primary text-white pagination-btn active">1</button>
+            <button class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-700 hover:border-primary hover:text-primary transition-colors pagination-btn">2</button>
+            <button class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-700 hover:border-primary hover:text-primary transition-colors pagination-btn">3</button>
+            <button class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-700 hover:border-primary hover:text-primary transition-colors pagination-btn">4</button>
+            <button class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary transition-colors">
+              <i class="ri-arrow-right-s-line"></i>
+            </button>
+          </div>
+          <div class="text-sm text-gray-500">
+            1-9 / 36 өнімдер көрсетілуде
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- WhatsApp Business Integration -->
+  <div class="fixed bottom-6 right-6 z-30">
+    <button class="w-14 h-14 bg-green-500 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-green-600 transition-colors">
+      <div class="w-8 h-8 flex items-center justify-center">
+        <i class="ri-whatsapp-fill ri-xl"></i>
+      </div>
+    </button>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div>
+        <a href="#" class="font-['Pacifico'] text-2xl text-white mb-6 inline-block">GoodPump</a>
+        <p class="text-gray-400 text-sm mb-6">1985 жылдан бері бүкіл әлем бойынша өндірістік қолданыстарға арналған инновациялық сорғы шешімдерін ұсынамыз.</p>
+        <div class="flex gap-4">
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-linkedin-fill"></i>
+            </div>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-facebook-fill"></i>
+            </div>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-twitter-x-fill"></i>
+            </div>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-youtube-fill"></i>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-6">Жылдам сілтемелер</h3>
+        <ul class="space-y-3">
+          <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Басты бет</a></li>
+          <li><a href="onim.html" data-readdy="true" class="text-gray-400 hover:text-white transition-colors">Өнімдер</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Біз туралы</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Байланыс</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Блог</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Мансап</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-6">Қолдау</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Техникалық қолдау</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Орнату нұсқаулары</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Кепілдік ақпараты</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Қосалқы бөлшектер</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Жиі қойылатын сұрақтар</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Қолдау қызметіне хабарласу</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-6">Жаңалықтар</h3>
+        <p class="text-gray-400 text-sm mb-4">Соңғы өнім жаңартулары мен салалық жаңалықтар үшін жаңалықтар таратылымына жазылыңыз.</p>
+        <form class="mb-6">
+          <div class="flex">
+            <input type="email" placeholder="Электрондық пошта мекенжайыңыз" class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-l focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-colors text-sm">
+            <button type="submit" class="px-4 py-3 bg-primary text-white font-medium rounded-r-button hover:bg-primary/90 transition-colors whitespace-nowrap">Жазылу</button>
+          </div>
+        </form>
+        <div>
+          <h4 class="text-sm font-medium mb-3">Төлем әдістері</h4>
+          <div class="flex gap-3">
+            <div class="w-10 h-6 bg-white rounded flex items-center justify-center">
+              <div class="w-6 h-6 flex items-center justify-center text-blue-700">
+                <i class="ri-visa-fill ri-lg"></i>
+              </div>
+            </div>
+            <div class="w-10 h-6 bg-white rounded flex items-center justify-center">
+              <div class="w-6 h-6 flex items-center justify-center text-red-600">
+                <i class="ri-mastercard-fill ri-lg"></i>
+              </div>
+            </div>
+            <div class="w-10 h-6 bg-white rounded flex items-center justify-center">
+              <div class="w-6 h-6 flex items-center justify-center text-blue-500">
+                <i class="ri-paypal-fill ri-lg"></i>
+              </div>
+            </div>
+            <div class="w-10 h-6 bg-white rounded flex items-center justify-center">
+              <div class="w-6 h-6 flex items-center justify-center text-gray-700">
+                <i class="ri-bank-card-fill ri-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-12 pt-8 border-t border-gray-800 text-center">
+      <p class="text-gray-400 text-sm">&copy; 2025 Премиум Сорғы Шешімдері. Барлық құқықтар қорғалған.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Sort dropdown
+  const sortButton = document.getElementById('sortButton');
+  const sortDropdown = document.getElementById('sortDropdown');
+  const selectedSort = document.getElementById('selectedSort');
+
+  document.addEventListener('click', function(event) {
+    if (!sortButton.contains(event.target)) {
+      sortDropdown.classList.add('hidden');
+    }
+  });
+
+  sortButton.addEventListener('click', function() {
+    sortDropdown.classList.toggle('hidden');
+  });
+
+  const sortOptions = sortDropdown.querySelectorAll('button');
+  sortOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      const sortValue = this.textContent;
+      selectedSort.textContent = 'Сұрыптау: ' + sortValue;
+      sortDropdown.classList.add('hidden');
+    });
+  });
+
+  // Toggle sidebar
+  const menuToggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  
+  menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('-translate-x-full');
+    sidebarOverlay.classList.toggle('hidden');
+  });
+  
+  sidebarOverlay.addEventListener('click', function() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.add('hidden');
+  });
+
+  // Mobile filter button
+  const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+  if (mobileFilterBtn) {
+    mobileFilterBtn.addEventListener('click', function() {
+      sidebar.classList.remove('-translate-x-full');
+      sidebarOverlay.classList.remove('hidden');
+    });
+  }
+
+  // Category toggles
+  const categoryItems = document.querySelectorAll('[data-category]');
+  categoryItems.forEach(item => {
+    item.addEventListener('click', function() {
+      const container = this.nextElementSibling;
+      container.classList.toggle('active');
+      const icon = this.querySelector('i');
+      if (container.classList.contains('active')) {
+        icon.classList.remove('ri-arrow-down-s-line');
+        icon.classList.add('ri-arrow-up-s-line');
+      } else {
+        icon.classList.remove('ri-arrow-up-s-line');
+        icon.classList.add('ri-arrow-down-s-line');
+      }
+    });
+  });
+
+  // Custom checkboxes
+  const checkboxes = document.querySelectorAll('.custom-checkbox');
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('click', function() {
+      this.classList.toggle('checked');
+    });
+  });
+
+  // Custom switches
+  const switches = document.querySelectorAll('.custom-switch');
+  switches.forEach(switchEl => {
+    switchEl.addEventListener('click', function() {
+      this.classList.toggle('active');
+    });
+  });
+
+  // Pagination buttons
+  const paginationBtns = document.querySelectorAll('.pagination-btn');
+  paginationBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      paginationBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
+      paginationBtns.forEach(b => b.classList.add('border', 'border-gray-200', 'text-gray-700'));
+      this.classList.add('active', 'bg-primary', 'text-white');
+      this.classList.remove('border', 'border-gray-200', 'text-gray-700');
+    });
+  });
+});
+</script>
+</body>
+</html>
